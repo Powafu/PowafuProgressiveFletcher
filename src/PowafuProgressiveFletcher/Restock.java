@@ -3,20 +3,19 @@ package PowafuProgressiveFletcher;
 import api.Banking;
 import api.ExGe;
 import api.IsReady;
-import org.rspeer.runetek.adapter.component.InterfaceComponent;
+
 import org.rspeer.runetek.adapter.component.Item;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
 import org.rspeer.runetek.api.component.Bank;
 import org.rspeer.runetek.api.component.GrandExchange;
 import org.rspeer.runetek.api.component.GrandExchangeSetup;
-import org.rspeer.runetek.api.component.Interfaces;
+
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.component.tab.Skill;
 import org.rspeer.runetek.api.component.tab.Skills;
 import org.rspeer.runetek.providers.RSGrandExchangeOffer;
 import org.rspeer.script.task.Task;
-import org.rspeer.ui.Log;
 
 import java.util.function.Predicate;
 
@@ -57,7 +56,7 @@ public class Restock extends Task {
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, 1, 3, 500, 0, false))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() -5), 3, 500, 0, false))
                             return Random.nextInt(600,1200);
                     }
 
@@ -172,10 +171,10 @@ public class Restock extends Task {
         {
             if (Skills.getLevel(Skill.FLETCHING) < 20)
                 return Math.min(Inventory.getCount(true, "Coins")
-                        / 55, getAmountToNextLvl()) + 1;
+                        / 55, Math.min((getAmountToNextLvl()) + 1, Random.nextInt(1000,5000)));
 
             return Math.min(Inventory.getCount(true, "Coins")
-                    / stringBowPrice(), getAmountToNextLvl() + 1);
+                    / stringBowPrice(), Math.min((getAmountToNextLvl()) + 1, Random.nextInt(1000,5000)));
         }
 
     private boolean buy(String name, int quantity)
