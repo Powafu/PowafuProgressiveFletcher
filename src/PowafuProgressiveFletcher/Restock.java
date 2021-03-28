@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import static PowafuProgressiveFletcher.Bow.getTargetBow;
 import static api.Banking.openBank;
 import static api.ExGe.canCollectGe;
+import static api.ExGe.collectOffers;
 import static org.rspeer.runetek.providers.RSGrandExchangeOffer.Type.BUY;
 import static org.rspeer.runetek.providers.RSGrandExchangeOffer.Type.SELL;
 
@@ -51,12 +52,16 @@ public class Restock extends Task {
             {
                 if (mustSellBows)
                 {
+                    if(ExGe.canCollectGe()) {
+                        collectOffers(false);
+                    }
+
                     if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
                         return loopDelay;
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, false))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, true))
                             return Random.nextInt(600,1200);
                     }
 
