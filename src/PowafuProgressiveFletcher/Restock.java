@@ -171,10 +171,10 @@ public class Restock extends Task {
         {
             if (Skills.getLevel(Skill.FLETCHING) < 20)
                 return Math.min(Inventory.getCount(true, "Coins")
-                        / 55, Math.min((getAmountToNextLvl()) + 1, Random.nextInt(1000,5000)));
+                        / 55, Math.min((getAmountToNextLvl()) + 1, Random.nextInt(800,1800)));
 
             return Math.min(Inventory.getCount(true, "Coins")
-                    / stringBowPrice(), Math.min((getAmountToNextLvl()) + 1, Random.nextInt(1000,5000)));
+                    / stringBowPrice(), Math.min((getAmountToNextLvl()) + 1, Random.nextInt(800,1800)));
         }
 
     private boolean buy(String name, int quantity)

@@ -1,6 +1,5 @@
 package api;
 
-import org.tribot.api2007.*;
 import org.rspeer.runetek.adapter.component.Item;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
@@ -14,7 +13,7 @@ public class Banking {
     }
 
     public static boolean withdrawItem(int itemID, int amount, boolean noted) {
-        if (Banking.isBankLoaded) {
+        if (Bank.isOpen()) {
             int currentItemCount = Bank.getCount(itemID);
             Item targetItemInInventory = Inventory.getFirst(itemID);
 
