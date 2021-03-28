@@ -34,8 +34,8 @@ public class Restock extends Task {
     private boolean hasBanked, hasCounted, mustSellBows, mustBuyKnife;
     private int targetItemCount, stringCount;
     private final Predicate<Item>
-            longbow = i -> i.getName().toLowerCase().contains("longbow"),
-            shortbow = i -> i.getName().toLowerCase().contains("shortbow"),
+            longbow = i -> i.getName().toLowerCase().contains("longbow") && !i.getName().toLowerCase().contains("(u)"),
+            shortbow = i -> i.getName().toLowerCase().contains("shortbow") && !i.getName().toLowerCase().contains("(u)"),
             string = i -> i.getName().equals("Bow string");
     private int amountToBuy;
 
@@ -56,7 +56,7 @@ public class Restock extends Task {
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() -5), 3, 500, 0, false))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, false))
                             return Random.nextInt(600,1200);
                     }
 

@@ -95,7 +95,6 @@ public class FletchBanking extends Task {
         { return Bow.getTargetBow().getMaterial(); }
 
 
-
     private boolean mustDepositShit()
         {
             if (Skills.getLevel(Skill.FLETCHING) < 20)
