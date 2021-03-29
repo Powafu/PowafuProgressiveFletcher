@@ -62,7 +62,7 @@ public class Restock extends Task {
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, false))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() - 5), 3, 500, 0, false))
                             return Random.nextInt(600,1200);
                     }
 
