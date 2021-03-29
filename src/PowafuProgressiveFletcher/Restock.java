@@ -3,26 +3,27 @@ package PowafuProgressiveFletcher;
 import api.Banking;
 import api.ExGe;
 import api.IsReady;
-
+import org.rspeer.runetek.adapter.component.InterfaceComponent;
 import org.rspeer.runetek.adapter.component.Item;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
 import org.rspeer.runetek.api.component.Bank;
 import org.rspeer.runetek.api.component.GrandExchange;
 import org.rspeer.runetek.api.component.GrandExchangeSetup;
-
+import org.rspeer.runetek.api.component.Interfaces;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.component.tab.Skill;
 import org.rspeer.runetek.api.component.tab.Skills;
+import org.rspeer.runetek.api.query.results.GrandExchangeOfferQueryResults;
 import org.rspeer.runetek.providers.RSGrandExchangeOffer;
 import org.rspeer.script.task.Task;
+import org.rspeer.ui.Log;
 
 import java.util.function.Predicate;
 
 import static PowafuProgressiveFletcher.Bow.getTargetBow;
 import static api.Banking.openBank;
 import static api.ExGe.canCollectGe;
-import static api.ExGe.collectOffers;
 import static org.rspeer.runetek.providers.RSGrandExchangeOffer.Type.BUY;
 import static org.rspeer.runetek.providers.RSGrandExchangeOffer.Type.SELL;
 
@@ -35,8 +36,8 @@ public class Restock extends Task {
     private boolean hasBanked, hasCounted, mustSellBows, mustBuyKnife;
     private int targetItemCount, stringCount;
     private final Predicate<Item>
-            longbow = i -> i.getName().toLowerCase().contains("longbow") && !i.getName().toLowerCase().contains("(u)"),
-            shortbow = i -> i.getName().toLowerCase().contains("shortbow") && !i.getName().toLowerCase().contains("(u)"),
+            longbow = i -> i.getName().toLowerCase().contains("longbow"),
+            shortbow = i -> i.getName().toLowerCase().contains("shortbow"),
             string = i -> i.getName().equals("Bow string");
     private int amountToBuy;
 
@@ -52,8 +53,8 @@ public class Restock extends Task {
             {
                 if (mustSellBows)
                 {
-                    if(ExGe.canCollectGe()) {
-                        collectOffers(false);
+                    if (!GrandExchange.isOpen()) {
+                        GrandExchange.open();
                     }
 
                     if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
@@ -61,7 +62,7 @@ public class Restock extends Task {
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, true))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 3, 500, 0, false))
                             return Random.nextInt(600,1200);
                     }
 
@@ -176,10 +177,10 @@ public class Restock extends Task {
         {
             if (Skills.getLevel(Skill.FLETCHING) < 20)
                 return Math.min(Inventory.getCount(true, "Coins")
-                        / 55, Math.min((getAmountToNextLvl()) + 1, Random.nextInt(800,1800)));
+                        / 55, Math.min((getAmountToNextLvl() + 1), Random.nextInt(800,1800)));
 
             return Math.min(Inventory.getCount(true, "Coins")
-                    / stringBowPrice(), Math.min((getAmountToNextLvl()) + 1, Random.nextInt(800,1800)));
+                    / stringBowPrice(), Math.min((getAmountToNextLvl() + 1), Random.nextInt(800,1800)));
         }
 
     private boolean buy(String name, int quantity)

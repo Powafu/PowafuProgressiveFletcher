@@ -11,7 +11,7 @@ public enum Bow {
     WILLOW_LONG(40, 41.5,55,"Willow longbow (u)", "Willow longbow"),
     MAPLE_SHORT(50,50,75,"Maple shortbow (u)", "Maple shortbow"),
     MAPLE_LONG(55,58.3,85,"Maple longbow (u)", "Maple longbow"),
-    YEW_LONG(65,75,286,"Yew longbow (u)", "Yew longbow"),
+    YEW_LONG(70,75,286,"Yew longbow (u)", "Yew longbow"),
     MAGIC_LONG(85, 91.5,1025,"Magic longbow (u)", "Magic longbow");
 
     private final int lvl;
@@ -47,10 +47,10 @@ public enum Bow {
     }
 
     public static int getTargetLvl(){
-        if (Skills.getLevel(Skill.FLETCHING) >= 65)
+        if (Skills.getLevel(Skill.FLETCHING) >= 70)
             return 85;
         if (Skills.getLevel(Skill.FLETCHING) >= 55)
-            return 65;
+            return 70;
         if (Skills.getLevel(Skill.FLETCHING) >= 50)
             return 55;
         if (Skills.getLevel(Skill.FLETCHING) >= 40)

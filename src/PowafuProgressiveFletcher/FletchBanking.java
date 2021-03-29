@@ -51,13 +51,9 @@ public class FletchBanking extends Task {
                     return withdrawShaftMaterials();
 
                 //poggers my dude we are above 10 fletch lets string some fuckin bows
-                if (Bank.contains(material()) && !Inventory.contains(material()))
+                if (Bank.contains(material()) && !Inventory.contains(material()) && Bank.contains(bowstring) && !Inventory.contains((string)))
                 {
                     api.Banking.withdrawItem(material(), 14, false);
-                    return 75;
-                }
-                if (Bank.contains(bowstring) && !Inventory.contains(string))
-                {
                     api.Banking.withdrawItem(bowstring, 14, false);
                     return 75;
                 }
@@ -93,6 +89,7 @@ public class FletchBanking extends Task {
 
     private static String material()
         { return Bow.getTargetBow().getMaterial(); }
+
 
 
     private boolean mustDepositShit()
