@@ -54,7 +54,7 @@ public class Restock extends Task {
                 if (mustSellBows)
                 {
                     if (!GrandExchange.isOpen()) {
-                        GrandExchange.open();
+                        GrandExchange.open(GrandExchange.View.SELL_OFFER);
                     }
 
                     if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
@@ -62,7 +62,7 @@ public class Restock extends Task {
 
                     for (Item item : Inventory.getItems(shortbow.or(longbow)))
                     {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() - 5), 3, 500, 0, false))
+                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() - 10), 3, 500, 1, false))
                             return Random.nextInt(600,1200);
                     }
 
