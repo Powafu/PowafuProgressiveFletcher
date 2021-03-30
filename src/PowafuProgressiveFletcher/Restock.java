@@ -7,10 +7,7 @@ import org.rspeer.runetek.adapter.component.InterfaceComponent;
 import org.rspeer.runetek.adapter.component.Item;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
-import org.rspeer.runetek.api.component.Bank;
-import org.rspeer.runetek.api.component.GrandExchange;
-import org.rspeer.runetek.api.component.GrandExchangeSetup;
-import org.rspeer.runetek.api.component.Interfaces;
+import org.rspeer.runetek.api.component.*;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.component.tab.Skill;
 import org.rspeer.runetek.api.component.tab.Skills;
@@ -19,6 +16,7 @@ import org.rspeer.runetek.providers.RSGrandExchangeOffer;
 import org.rspeer.script.task.Task;
 import org.rspeer.ui.Log;
 
+import java.io.IOException;
 import java.util.function.Predicate;
 
 import static PowafuProgressiveFletcher.Bow.getTargetBow;
@@ -36,8 +34,8 @@ public class Restock extends Task {
     private boolean hasBanked, hasCounted, mustSellBows, mustBuyKnife;
     private int targetItemCount, stringCount;
     private final Predicate<Item>
-            longbow = i -> i.getName().toLowerCase().contains("longbow"),
-            shortbow = i -> i.getName().toLowerCase().contains("shortbow"),
+            longbow = i -> i.getName().toLowerCase().contains("longbow") && !i.getName().toLowerCase().contains("(u)"),
+            shortbow = i -> i.getName().toLowerCase().contains("shortbow") && !i.getName().toLowerCase().contains("(u)"),
             string = i -> i.getName().equals("Bow string");
     private int amountToBuy;
 
@@ -53,26 +51,26 @@ public class Restock extends Task {
             {
                 if (mustSellBows)
                 {
-                    if (!GrandExchange.isOpen()) {
-                        GrandExchange.open(GrandExchange.View.SELL_OFFER);
-                    }
+                    if (GrandExchange.isOpen()) {
+                        if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
+                            return loopDelay;
 
-                    if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
+                        for (Item item : Inventory.getItems(shortbow.or(longbow))) {
+                                if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 10, 500, 0, false))
+                                    return Random.nextInt(600, 1200);
+                        }
+
+                        if (GrandExchange.newQuery().nameContains("bow").results().first() == null
+                                && Inventory.getFirst(shortbow.or(longbow)) == null)
+                            mustSellBows = false;
+
+                        if (canCollectGe() && GrandExchange.collectAll())
+                            Time.sleepUntil(ExGe::hasNotAnyFinishedOffers, 350, 3000);
                         return loopDelay;
-
-                    for (Item item : Inventory.getItems(shortbow.or(longbow)))
-                    {
-                        if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, (GrandExchangeSetup.getPricePerItem() - 10), 3, 500, 1, false))
-                            return Random.nextInt(600,1200);
                     }
-
-                    if (GrandExchange.newQuery().nameContains("bow").results().first() == null
-                            && Inventory.getFirst(shortbow.or(longbow)) == null)
-                        mustSellBows = false;
-
-                    if (canCollectGe() && GrandExchange.collectAll())
-                        Time.sleepUntil(ExGe::hasNotAnyFinishedOffers, 350, 3000);
-                    return loopDelay;
+                    if (!GrandExchange.isOpen()) {
+                        GrandExchange.open();
+                    }
                 }
 
                 //do buy shit
