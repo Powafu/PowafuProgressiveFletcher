@@ -67,10 +67,13 @@ public class Restock extends Task {
                                 && Inventory.getFirst(shortbow.or(longbow)) == null)
                             mustSellBows = false;
 
-                        if (canCollectGe() && GrandExchange.collectAll())
-                            Time.sleepUntil(ExGe::hasNotAnyFinishedOffers, 350, 3000);
-                        return loopDelay;
+                        if (!GrandExchange.isOpen()) {
+                            GrandExchange.open();
 
+                            if (canCollectGe() && GrandExchange.collectAll())
+                                Time.sleepUntil(ExGe::hasNotAnyFinishedOffers, 350, 3000);
+                            return loopDelay;
+                        }
                 }
 
                 //do buy shit
