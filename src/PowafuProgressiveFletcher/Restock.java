@@ -51,9 +51,11 @@ public class Restock extends Task {
             {
                 if (mustSellBows)
                 {
-                    if (GrandExchange.isOpen()) {
-                        if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
+
+                    if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
                             return loopDelay;
+
+                    if (GrandExchange.isOpen()) {
 
                         for (Item item : Inventory.getItems(shortbow.or(longbow))) {
                                 if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 10, 500, 0, false))
