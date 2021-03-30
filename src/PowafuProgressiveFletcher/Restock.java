@@ -51,15 +51,16 @@ public class Restock extends Task {
             {
                 if (mustSellBows)
                 {
-
                     if (!ExGe.hasNotAnyFinishedOffers() && !ExGe.collectFinishedOffers(false))
                             return loopDelay;
 
-                    if (GrandExchange.isOpen()) {
 
                         for (Item item : Inventory.getItems(shortbow.or(longbow))) {
-                                if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 10, 500, 0, false))
-                                    return Random.nextInt(600, 1200);
+                            if (!GrandExchange.isOpen()) {
+                                GrandExchange.open();
+                            }
+                            if (!ExGe.smartExchangeWithPrice(SELL, item.getName(), 0, 5000, GrandExchangeSetup.getPricePerItem(), 10, 500, 0, false))
+                                return Random.nextInt(600, 1200);
                         }
 
                         if (GrandExchange.newQuery().nameContains("bow").results().first() == null
@@ -69,10 +70,7 @@ public class Restock extends Task {
                         if (canCollectGe() && GrandExchange.collectAll())
                             Time.sleepUntil(ExGe::hasNotAnyFinishedOffers, 350, 3000);
                         return loopDelay;
-                    }
-                    if (!GrandExchange.isOpen()) {
-                        GrandExchange.open();
-                    }
+
                 }
 
                 //do buy shit
