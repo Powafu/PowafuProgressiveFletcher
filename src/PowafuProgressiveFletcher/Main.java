@@ -2,7 +2,12 @@ package PowafuProgressiveFletcher;
 
 import api.Banking;
 import api.IsReady;
+import api.file.FileManager;
+import message.Messenger;
+import org.rspeer.runetek.api.ClientSupplier;
+import org.rspeer.runetek.api.Game;
 import org.rspeer.runetek.api.Login;
+import org.rspeer.runetek.api.Worlds;
 import org.rspeer.runetek.api.commons.StopWatch;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.component.tab.Skill;
@@ -13,6 +18,8 @@ import org.rspeer.script.ScriptCategory;
 import org.rspeer.script.ScriptMeta;
 import org.rspeer.script.task.TaskScript;
 import org.rspeer.ui.Log;
+import store.Config;
+import store.Store;
 
 import java.awt.*;
 import java.awt.Font;
@@ -21,6 +28,8 @@ import java.awt.Font;
         developer =  "WishToBeGone",version = 0.1)
 public final class Main extends TaskScript implements RenderListener {
     private static StopWatch timeElapsed;
+
+    private static Messenger messenger;
 
     private static int bowsMade,startLvl,materialsLeft,storedLvl = 1;
     private static double xpGained;
@@ -31,6 +40,10 @@ public final class Main extends TaskScript implements RenderListener {
     public static void setXpGained(double xp){Main.xpGained = xpGained + xp;}
     public static void setMaterialsLeft(int materialsLeft) {Main.materialsLeft = materialsLeft;}
     public static int getMaterialsLeft(){return materialsLeft;}
+
+    public static Messenger getMessenger() {
+        return messenger;
+    }
 
     private final int gainedLevel() {
         int currentLvl = Skills.getLevel(Skill.FLETCHING);
@@ -102,16 +115,28 @@ public final class Main extends TaskScript implements RenderListener {
     @Override
     public void onStart()
         {
+            // Messenger
+            messenger = new Messenger();
+
+            // Set starting world
+            if (Game.isLoggedIn()) {
+                Log.fine("Setting currently logged in account as our account.");
+                Store.setTargetWorld(Worlds.getCurrent());
+            }
+            else {
+                Store.setTargetWorld(ClientSupplier.get().getCurrentWorld());
+            }
+
             submit(new Initialize(this));
             timeElapsed = StopWatch.start();
         }
 
     @Override
-    public void onStop()
-        {
-            Log.info("Script ended, have a nice day!");
-            super.onStop();
-        }
+    public void onStop() {
+        Config.setIsStopping(true);
+        Log.info("Script ended, have a nice day!");
+        super.onStop();
+    }
 
     public static boolean hasAllMaterials()
         {

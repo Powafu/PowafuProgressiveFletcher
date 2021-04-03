@@ -1,6 +1,9 @@
 package PowafuProgressiveFletcher;
 
 import api.IsReady;
+import message.MessageHelper;
+import message.type.Request;
+import message.type.RequestType;
 import org.rspeer.runetek.adapter.component.Item;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
@@ -8,8 +11,11 @@ import org.rspeer.runetek.api.component.Bank;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.component.tab.Skill;
 import org.rspeer.runetek.api.component.tab.Skills;
+import org.rspeer.runetek.api.scene.Players;
 import org.rspeer.script.task.Task;
 import org.rspeer.ui.Log;
+import store.Config;
+import store.Store;
 
 import java.util.function.Predicate;
 
@@ -36,6 +42,20 @@ public class FletchBanking extends Task {
         {
             if (Bank.isOpen())
             {
+                // Check if muling is needed
+                if (Bank.getCount("Coins") + Inventory.getCount(true, "Coins") > Config.MIN_COINS_TO_TRIGGER_MULING) {
+                    Log.fine("Time to mule! Sending message to mule.");
+                    Store.getMuleClient().sendMessage(new Request(MessageHelper.generateMessageID(), Store.getOurClient().getTag(), RequestType.MULE.toString(), Players.getLocal().getName()).toUrl());
+                    Log.fine("Waiting 30 seconds for response");
+                    boolean muling = Time.sleepUntil(() -> Store.isMuling() || Config.isStopping(), 30000);
+                    if (muling) {
+                        return Config.getLoopReturn();
+                    }
+                    Log.severe("Failed to activate muling");
+                    return Config.getLoopReturn();
+                }
+
+
                 //we have everything we need to string, we out this hoe
                 if (hasAllMaterials())
                     return closeBank();
