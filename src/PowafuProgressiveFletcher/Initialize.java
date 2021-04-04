@@ -43,12 +43,12 @@ public class Initialize extends Task {
                 Store.setTask("Finding launched clients.");
                 Store.setLaunchedClients(BotManagement.getRunningClients());
                 Time.sleepUntil(() -> Store.getLaunchedClients() != null || Config.isStopping(), 30000);
-                return Config.getLoopReturn();
+                return Config.getQuickLoopReturn();
             }
             if (Store.getOurClient() == null) {
                 Store.setTask("Finding our launched client");
                 BotManagementHelper.findOurLaunchedClientByTag(RSPeer.getClientTag());
-                return Config.getLoopReturn();
+                return Config.getQuickLoopReturn();
             }
             if (Store.getMuleClient() == null) {
                 Store.setTask("Finding mule client.");
@@ -56,9 +56,9 @@ public class Initialize extends Task {
                 if (!found) {
                     Log.severe("Waiting to find mule client");
                     Time.sleep(15000, 20000);
-                    return Config.getLoopReturn();
+                    return Config.getQuickLoopReturn();
                 }
-                return Config.getLoopReturn();
+                return Config.getQuickLoopReturn();
             }
 
             if (Main.getStartLvl() <= 1 && !hasSetStart)

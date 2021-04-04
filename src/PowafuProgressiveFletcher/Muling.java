@@ -17,6 +17,7 @@ import store.Store;
 public class Muling extends Task {
 
     private boolean hasBankedForMuling = false;
+    private boolean hasTraded = false;
 
     @Override
     public boolean validate() {
@@ -32,6 +33,7 @@ public class Muling extends Task {
         }
         if (Trade.isOpen(false)) {
             Store.setTask("1st Trade Screen");
+            hasTraded = true;
             if (EnterInput.isOpen()) {
                 Store.setTask("Entering input");
                 EnterInput.initiate(Random.nextInt(99999999, 99999999));
@@ -71,6 +73,7 @@ public class Muling extends Task {
             if (Inventory.containsAnyExcept("Coins")) {
                 Store.setTask("Depositing Inventory");
                 Bank.depositInventory();
+                Time.sleepUntil(() -> !Inventory.containsAnyExcept("Coins"), 2000);
                 return Config.getLoopReturn();
             }
             Item item = Bank.getFirst("Coins");
@@ -90,6 +93,7 @@ public class Muling extends Task {
             Log.severe("Mule timer timed out. Going back to fletching");
             Store.setIsMuling(false);
             hasBankedForMuling = false;
+            hasTraded = false;
             Timer.MULE_TIMEOUT_TIME.stop();
             return Config.getLoopReturn();
         }
@@ -104,6 +108,7 @@ public class Muling extends Task {
             Log.fine("Done muling. Going back to fletching");
             Store.setIsMuling(false);
             hasBankedForMuling = false;
+            hasTraded = false;
             Timer.MULE_TIMEOUT_TIME.stop();
             return Config.getLoopReturn();
         }

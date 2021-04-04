@@ -13,6 +13,10 @@ public class Config {
 
     private static String apiKey;
 
+    public static int getQuickLoopReturn() {
+        return Random.nextInt(50, 200);
+    }
+
     public static int getLoopReturn() {
         return Random.nextInt(400, 1000);
     }
