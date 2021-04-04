@@ -21,9 +21,9 @@ public class HoppingToOriginalWorld extends Task {
             Interfaces.closeAll();
             return Config.getLoopReturn();
         }
-        Store.setTask("Hopping to Mule World");
+        Store.setTask("Hopping to original world");
         if (Dialog.canContinue()) Dialog.processContinue();
-        WorldHopper.hopTo(Store.getMuleInfo().getWorld());
+        WorldHopper.hopTo(Store.getStartingWorld());
         return Config.getLoopReturn();
     }
 }
