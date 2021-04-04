@@ -43,7 +43,8 @@ public class FletchBanking extends Task {
             if (Bank.isOpen())
             {
                 // Check if muling is needed
-                if (Bank.getCount("Coins") + Inventory.getCount(true, "Coins") > Config.MIN_COINS_TO_TRIGGER_MULING) {
+                int totalNumOfCoins = Bank.getCount("Coins") + Inventory.getCount(true, "Coins");
+                if (totalNumOfCoins <= Config.LOW_COINS_TO_TRIGGER_MULING || totalNumOfCoins >= Config.HIGH_COINS_TO_TRIGGER_MULING) {
                     Log.fine("Time to mule! Sending message to mule.");
                     Store.getMuleClient().sendMessage(new Request(MessageHelper.generateMessageID(), Store.getOurClient().getTag(), RequestType.MULE.toString(), Players.getLocal().getName()).toUrl());
                     Log.fine("Waiting 30 seconds for response");

@@ -133,6 +133,9 @@ public final class Main extends TaskScript implements RenderListener {
 
     @Override
     public void onStop() {
+        if (Main.getMessenger() != null) {
+            Main.getMessenger().dispose();
+        }
         Config.setIsStopping(true);
         Log.info("Script ended, have a nice day!");
         super.onStop();

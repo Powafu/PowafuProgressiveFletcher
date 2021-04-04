@@ -5,7 +5,8 @@ import org.rspeer.runetek.api.commons.math.Random;
 public class Config {
 
     public static final String MULE_CLIENT_SCRIPT_NAME = "Powafu Progressive Fletcher Mule";
-    public static final int MIN_COINS_TO_TRIGGER_MULING = 2000000;
+    public static final int LOW_COINS_TO_TRIGGER_MULING = 200000; // Put minimum amount of coins needed for restocking
+    public static final int HIGH_COINS_TO_TRIGGER_MULING = 2000000; // This amount of coins or higher triggers muling
 
     private static boolean isSetup = true;
     private static boolean isStopping = false;
