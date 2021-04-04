@@ -73,7 +73,7 @@ public class Initialize extends Task {
             }
             //does this even work??
             Log.info("Submit the rest of the tasks and remove initializer");
-            main.submit(new Stopping(), new Muling(), new Restock(), new FletchBanking(), new Fletching());
+            main.submit(new Stopping(), new Muling(), new HoppingToOriginalWorld(), new Restock(), new FletchBanking(), new Fletching());
             Log.info("Tasks submitted, remove initializer");
             main.remove(this);
             return 1000;

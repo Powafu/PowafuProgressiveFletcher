@@ -61,8 +61,7 @@ public class Store {
 
     private static boolean isMuling = false;
 
-    private static int targetWorld = 302;
-    private static int previousWorld = -1;
+    private static int startingWorld = 302;
 
     public static String getTask() {
         return task;
@@ -105,20 +104,12 @@ public class Store {
         Store.muleInfo = muleInfo;
     }
 
-    public static int getTargetWorld() {
-        return targetWorld;
+    public static int getStartingWorld() {
+        return startingWorld;
     }
 
-    public static void setTargetWorld(int targetWorld) {
-        Store.targetWorld = targetWorld;
-    }
-
-    public static int getPreviousWorld() {
-        return previousWorld;
-    }
-
-    public static void setPreviousWorld(int previousWorld) {
-        Store.previousWorld = previousWorld;
+    public static void setStartingWorld(int startingWorld) {
+        Store.startingWorld = startingWorld;
     }
 
     public static boolean isMuling() {

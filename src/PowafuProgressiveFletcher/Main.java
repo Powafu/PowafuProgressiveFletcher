@@ -1,12 +1,9 @@
 package PowafuProgressiveFletcher;
 
-import api.Banking;
 import api.IsReady;
-import api.file.FileManager;
 import message.Messenger;
 import org.rspeer.runetek.api.ClientSupplier;
 import org.rspeer.runetek.api.Game;
-import org.rspeer.runetek.api.Login;
 import org.rspeer.runetek.api.Worlds;
 import org.rspeer.runetek.api.commons.StopWatch;
 import org.rspeer.runetek.api.component.tab.Inventory;
@@ -121,10 +118,10 @@ public final class Main extends TaskScript implements RenderListener {
             // Set starting world
             if (Game.isLoggedIn()) {
                 Log.fine("Setting currently logged in account as our account.");
-                Store.setTargetWorld(Worlds.getCurrent());
+                Store.setStartingWorld(Worlds.getCurrent());
             }
             else {
-                Store.setTargetWorld(ClientSupplier.get().getCurrentWorld());
+                Store.setStartingWorld(ClientSupplier.get().getCurrentWorld());
             }
 
             submit(new Initialize(this));
