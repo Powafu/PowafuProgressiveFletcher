@@ -104,7 +104,7 @@ public class Muling extends Task {
             Time.sleepUntil(() -> Bank.isOpen() || !Players.getLocal().isMoving(), 10000);
             return Config.getLoopReturn();
         }
-        if (Time.sleepUntil(Inventory::isEmpty, 5000)) {
+        if (hasTraded) {
             Log.fine("Done muling. Going back to fletching");
             Store.setIsMuling(false);
             hasBankedForMuling = false;
